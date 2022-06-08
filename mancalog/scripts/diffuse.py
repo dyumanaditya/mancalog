@@ -66,7 +66,7 @@ def main(args, graph_data):
     output.write(interpretation)
 
     # Profile
-    with open('./profiling/profile_nodes.csv', 'a') as file:
+    with open('./profiling/profile_components.csv', 'a') as file:
         file.write(f'{args.sample_size},{end-start}\n')
         
 
@@ -93,8 +93,12 @@ if __name__ == "__main__":
 
     # Random sample from data (10,000 nodes and 47,000 edges)
     graph_data = nx.read_graphml(args.graph_path)
-    sampled_nodes = random.sample(list(graph_data), args.sample_size)
+    sampled_nodes = random.sample(list(graph_data.nodes), args.sample_size)
     sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
+    
+    # graph_data = nx.read_graphml(args.graph_path)
+    # sampled_edges = random.sample(list(graph_data), args.sample_size)
+    # sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
 
     if args.profile:
         profiler = cProfile.Profile()
