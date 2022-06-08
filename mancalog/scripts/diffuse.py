@@ -91,8 +91,10 @@ if __name__ == "__main__":
     
     graph_data = nx.read_graphml(args.graph_path)
     for i in range(1, 10000):
-        sampled_edges = random.sample(list(graph_data.edges), i)
-        sampled_graph = graph_data.edge_subgraph(sampled_edges+[('n2825', 'n2625')])
+        # sampled_edges = random.sample(list(graph_data.edges), i)
+        # sampled_graph = graph_data.edge_subgraph(sampled_edges+[('n2825', 'n2625')])
+        sampled_nodes = random.sample(list(graph_data.nodes), i)
+        sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
         start = time.time()
 
         if args.profile:
@@ -112,5 +114,5 @@ if __name__ == "__main__":
         end = time.time()
 
         # Profile
-        with open('./profiling/profile_edges.csv', 'a') as file:
+        with open('./profiling/profile_nodes.csv', 'a') as file:
             file.write(f'{i},{end-start}\n')
