@@ -108,4 +108,4 @@ if __name__ == "__main__":
             f.write(s.getvalue())
 
     else:
-        main(args, graph_data)
+        main(args, sampled_graph)

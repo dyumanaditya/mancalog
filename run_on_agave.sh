@@ -29,7 +29,8 @@ profile_out=agave_gpu2_1cpu_32core.txt
 
 #-------------------------------------------------------------------------
 # Initialize conda environment
-# module load anaconda/py3
+module load anaconda/py3
+source activate MANCALOG
 # echo Checking if MANCALOG conda environment exists
 # if conda env list | grep ".*MANCALOG.*" >/dev/null 2>&1
 # then
@@ -45,7 +46,10 @@ profile_out=agave_gpu2_1cpu_32core.txt
 
 
 # Run mancalog
-python3 -m mancalog.scripts.diffuse --graph_path $graph_path --timesteps $timesteps --rules_yaml_path $rules_yaml_path  --facts_yaml_path $facts_yaml_path --labels_yaml_path $labels_yaml_path --profile $profile --profile_out $profile_out --sample_size $1
+for i in {1..10000}
+do
+    python3 -m mancalog.scripts.diffuse --graph_path $graph_path --timesteps $timesteps --rules_yaml_path $rules_yaml_path  --facts_yaml_path $facts_yaml_path --labels_yaml_path $labels_yaml_path --profile $profile --profile_out $profile_out --sample_size $i
+done
 #-------------------------------------------------------------------------
 
 
