@@ -29,19 +29,19 @@ profile_out=agave_gpu2_1cpu_32core.txt
 
 #-------------------------------------------------------------------------
 # Initialize conda environment
-module load anaconda/py3
-echo Checking if MANCALOG conda environment exists
-if conda env list | grep ".*MANCALOG.*" >/dev/null 2>&1
-then
-    echo MANCALOG environment exists
-    source activate MANCALOG
-else
-    echo Creating MANCALOG conda environment
-    conda create -n MANCALOG
-    source activate MANCALOG
-    echo Installing necessary packages
-    pip install -r requirements.txt
-fi
+# module load anaconda/py3
+# echo Checking if MANCALOG conda environment exists
+# if conda env list | grep ".*MANCALOG.*" >/dev/null 2>&1
+# then
+#     echo MANCALOG environment exists
+#     source activate MANCALOG
+# else
+#     echo Creating MANCALOG conda environment
+#     conda create -n MANCALOG
+#     source activate MANCALOG
+#     echo Installing necessary packages
+#     pip install -r requirements.txt
+# fi
 
 
 # Run mancalog
