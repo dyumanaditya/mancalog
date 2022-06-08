@@ -94,7 +94,7 @@ if __name__ == "__main__":
     # Random sample from data (10,000 nodes and 47,000 edges)
     graph_data = nx.read_graphml(args.graph_path)
     sampled_nodes = random.sample(list(graph_data), args.sample_size)
-    sampled_graph = graph_data.subgraph(sampled_nodes)
+    sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
 
     if args.profile:
         profiler = cProfile.Profile()
