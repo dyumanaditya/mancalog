@@ -46,10 +46,7 @@ source activate MANCALOG
 
 
 # Run mancalog
-for i in {1..10000}
-do
-    python3 -m mancalog.scripts.diffuse --graph_path $graph_path --timesteps $timesteps --rules_yaml_path $rules_yaml_path  --facts_yaml_path $facts_yaml_path --labels_yaml_path $labels_yaml_path --profile $profile --profile_out $profile_out --sample_size $i
-done
+python3 -m mancalog.scripts.diffuse --graph_path $graph_path --timesteps $timesteps --rules_yaml_path $rules_yaml_path  --facts_yaml_path $facts_yaml_path --labels_yaml_path $labels_yaml_path --profile $profile --profile_out $profile_out
 #-------------------------------------------------------------------------
 
 

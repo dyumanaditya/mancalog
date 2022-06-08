@@ -30,7 +30,6 @@ def argparser():
 
 
 def main(args, graph_data):
-    start = time.time()
     yaml_parser = YAMLParser()
 
     # Read graph & retrieve tmax
@@ -58,16 +57,10 @@ def main(args, graph_data):
 
     # Diffusion process
     interpretation = program.diffusion()
-    end = time.time()
-    print(end-start)
 
     # Write output to a pickle file. The output is a list of panda dataframes. The index of the list corresponds to the timestep
-    output = Output()
-    output.write(interpretation)
-
-    # Profile
-    with open('./profiling/profile_components.csv', 'a') as file:
-        file.write(f'{args.sample_size},{end-start}\n')
+    # output = Output()
+    # output.write(interpretation)
         
 
     # Comment out the below code if you do not want to print the output
@@ -97,19 +90,27 @@ if __name__ == "__main__":
     # sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
     
     graph_data = nx.read_graphml(args.graph_path)
-    sampled_edges = random.sample(list(graph_data.edges), args.sample_size)
-    sampled_graph = graph_data.edge_subgraph(sampled_edges+[('n2825', 'n2625')])
+    for i in range(1, 10000):
+        sampled_edges = random.sample(list(graph_data.edges), i)
+        sampled_graph = graph_data.edge_subgraph(sampled_edges+[('n2825', 'n2625')])
+        start = time.time()
 
-    if args.profile:
-        profiler = cProfile.Profile()
-        profiler.enable()
-        main(args, sampled_graph)
-        profiler.disable()
-        s = io.StringIO()
-        stats = pstats.Stats(profiler, stream=s).sort_stats('tottime')
-        stats.print_stats()
-        with open('./profiling/' + args.profile_output, 'w+') as f:
-            f.write(s.getvalue())
+        if args.profile:
+            profiler = cProfile.Profile()
+            profiler.enable()
+            main(args, sampled_graph)
+            profiler.disable()
+            s = io.StringIO()
+            stats = pstats.Stats(profiler, stream=s).sort_stats('tottime')
+            stats.print_stats()
+            with open('./profiling/' + args.profile_output, 'w+') as f:
+                f.write(s.getvalue())
 
-    else:
-        main(args, sampled_graph)
+        else:
+            main(args, sampled_graph)
+        
+        end = time.time()
+
+        # Profile
+        with open('./profiling/profile_edges.csv', 'a') as file:
+            file.write(f'{i},{end-start}\n')
