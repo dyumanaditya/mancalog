@@ -31,6 +31,7 @@ def argparser():
 
 def main(args, graph_data):
     yaml_parser = YAMLParser()
+    print(args.timesteps)
 
     # Read graph & retrieve tmax
     tmax = args.timesteps
@@ -90,17 +91,18 @@ if __name__ == "__main__":
     # sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
     
     graph_data = nx.read_graphml(args.graph_path)
-    for i in range(1, 10000):
+    for i in range(1, 500):
         # sampled_edges = random.sample(list(graph_data.edges), i)
         # sampled_graph = graph_data.edge_subgraph(sampled_edges+[('n2825', 'n2625')])
-        sampled_nodes = random.sample(list(graph_data.nodes), i)
-        sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
+        # sampled_nodes = random.sample(list(graph_data.nodes), i)
+        # sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
+        args.timesteps = i
         start = time.time()
 
         if args.profile:
             profiler = cProfile.Profile()
             profiler.enable()
-            main(args, sampled_graph)
+            main(args, graph_data)
             profiler.disable()
             s = io.StringIO()
             stats = pstats.Stats(profiler, stream=s).sort_stats('tottime')
@@ -109,10 +111,10 @@ if __name__ == "__main__":
                 f.write(s.getvalue())
 
         else:
-            main(args, sampled_graph)
+            main(args, graph_data)
         
         end = time.time()
 
         # Profile
-        with open('./profiling/profile_nodes.csv', 'a') as file:
+        with open('./profiling/profile_timestep.csv', 'a') as file:
             file.write(f'{i},{end-start}\n')
