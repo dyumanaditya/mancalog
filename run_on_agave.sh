@@ -22,7 +22,7 @@ graph_path=~/Documents/honda/JP3854600008_honda.graphml
 rules_yaml_path=mancalog/examples/example_yamls/rules.yaml
 facts_yaml_path=mancalog/examples/example_yamls/facts.yaml
 labels_yaml_path=mancalog/examples/example_yamls/labels.yaml
-profile=true
+profile=false
 profile_out=agave_gpu2_1cpu_32core.txt
 #-------------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ fi
 
 
 # Run mancalog
-python3 -m mancalog.scripts.diffuse --graph_path $graph_path --timesteps $timesteps --rules_yaml_path $rules_yaml_path  --facts_yaml_path $facts_yaml_path --labels_yaml_path $labels_yaml_path --profile $profile --profile_out $profile_out
+python3 -m mancalog.scripts.diffuse --graph_path $graph_path --timesteps $timesteps --rules_yaml_path $rules_yaml_path  --facts_yaml_path $facts_yaml_path --labels_yaml_path $labels_yaml_path --profile $profile --profile_out $profile_out --sample_size $1
 #-------------------------------------------------------------------------
 
 

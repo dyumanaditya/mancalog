@@ -4,6 +4,8 @@ import cProfile
 import pstats
 import networkx as nx
 import portion
+import random
+import time
 
 from mancalog.scripts.components.node import Node
 from mancalog.scripts.components.edge import Edge
@@ -23,15 +25,17 @@ def argparser():
     parser.add_argument("--facts_yaml_path", type=str, required=True)
     parser.add_argument("--profile", type=bool, required=False, default=False)
     parser.add_argument("--profile_output", type=str)
+    parser.add_argument("--sample_size", type=int)
     return parser.parse_args()
 
 
-def main(args):
+def main(args, graph_data):
+    start = time.time()
     yaml_parser = YAMLParser()
 
     # Read graph & retrieve tmax
     tmax = args.timesteps
-    graph_data = nx.read_graphml(args.graph_path)
+    # graph_data = nx.read_graphml(args.graph_path)
 
     # Take a subgraph of the actual data
     # graph_data = nx.subgraph(graph_data, ['n2825', 'n2625', 'n2989'])
@@ -54,20 +58,27 @@ def main(args):
 
     # Diffusion process
     interpretation = program.diffusion()
+    end = time.time()
+    print(end-start)
 
     # Write output to a pickle file. The output is a list of panda dataframes. The index of the list corresponds to the timestep
     output = Output()
     output.write(interpretation)
 
+    # Profile
+    with open('./profiling/profile_nodes.csv', 'a') as file:
+        file.write(f'{args.sample_size},{end-start}\n')
+        
+
     # Comment out the below code if you do not want to print the output
     # Read the pickle file, and print the dataframes for each timestep
-    nodes = output.read('nodes')
-    edges = output.read('edges')
+    # nodes = output.read('nodes')
+    # edges = output.read('edges')
 
     # This is how you filter the dataframe to show only nodes that have success in a certain interval
-    filterer = Filter()
-    filtered_df = filterer.filter_by_bound(dataframe=nodes[args.timesteps-1], label='success', bound=portion.closed(0.7,1))
-    print(filtered_df)
+    # filterer = Filter()
+    # filtered_df = filterer.filter_by_bound(dataframe=nodes[args.timesteps-1], label='success', bound=portion.closed(0.7,1))
+    # print(filtered_df)
 
     # The code below will print all the dataframes from each timestep for both edges and nodes
     # for df in nodes:
@@ -79,10 +90,16 @@ def main(args):
 
 if __name__ == "__main__":
     args = argparser()
+
+    # Random sample from data (10,000 nodes and 47,000 edges)
+    graph_data = nx.read_graphml(args.graph_path)
+    sampled_nodes = random.sample(list(graph_data), args.sample_size)
+    sampled_graph = graph_data.subgraph(sampled_nodes)
+
     if args.profile:
         profiler = cProfile.Profile()
         profiler.enable()
-        main(args)
+        main(args, sampled_graph)
         profiler.disable()
         s = io.StringIO()
         stats = pstats.Stats(profiler, stream=s).sort_stats('tottime')
@@ -91,4 +108,4 @@ if __name__ == "__main__":
             f.write(s.getvalue())
 
     else:
-        main(args)
+        main(args, graph_data)
