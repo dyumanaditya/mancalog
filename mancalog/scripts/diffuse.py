@@ -92,13 +92,13 @@ if __name__ == "__main__":
     args = argparser()
 
     # Random sample from data (10,000 nodes and 47,000 edges)
-    graph_data = nx.read_graphml(args.graph_path)
-    sampled_nodes = random.sample(list(graph_data.nodes), args.sample_size)
-    sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
-    
     # graph_data = nx.read_graphml(args.graph_path)
-    # sampled_edges = random.sample(list(graph_data), args.sample_size)
+    # sampled_nodes = random.sample(list(graph_data.nodes), args.sample_size)
     # sampled_graph = graph_data.subgraph(sampled_nodes+['n2825'])
+    
+    graph_data = nx.read_graphml(args.graph_path)
+    sampled_edges = random.sample(list(graph_data.edges), args.sample_size)
+    sampled_graph = graph_data.edge_subgraph(sampled_edges+[('n2825', 'n2625')])
 
     if args.profile:
         profiler = cProfile.Profile()
